@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../consts';
+
+const stack = [
+  { group: 'Client', items: ['Unity', 'C#', 'Zenject', 'UniTask', 'UniRx', 'DOTween', 'Addressables', 'ScriptableObjects'] },
+  { group: 'Backend', items: ['ASP.NET Core', 'PostgreSQL', 'EF Core', 'REST', 'JWT'] },
+  { group: 'Mobile', items: ['Unity IAP', 'Firebase', 'AppsFlyer', 'UniWebView', 'IL2CPP'] },
+  { group: 'Tools', items: ['Git', 'CI/CD', 'Swagger', 'Bruno'] },
+];
+
+const experience = [
+  {
+    role: 'Unity Developer',
+    company: 'PinkThing',
+    period: '2023 - 2026',
+    points: [
+      'Shipped a match 3 puzzle game to Google Play',
+      'Config-driven level generation for 200+ levels, ~70% less build time',
+      'Built the ASP.NET backend: JWT auth, EF Core, PostgreSQL',
+      'Cut runtime memory ~30% for low-end devices',
+    ],
+  },
+  {
+    role: 'Unity Developer',
+    company: 'Syndicate Group',
+    period: '2025 - 2026',
+    points: [
+      '33 mobile apps in 14 months from one reusable template',
+      'Reskins cut to 2-4 hours with zero new code',
+      'iOS builds through company CI',
+    ],
+  },
+  {
+    role: 'Unity Programmer',
+    company: 'PlayGenes',
+    period: '2024 - 2025',
+    points: [
+      'Modular minigame framework, ~40% less time per new variant',
+      'Worked in a large legacy codebase',
+    ],
+  },
+];
+---
+
+<Base title="About" description="About Damir Mavliutov - Unity developer working on mobile games and backend.">
+  <Header />
+
+  <main class="container-page pt-16 pb-16 sm:pt-20">
+    <h1 class="text-4xl font-bold tracking-tight">About</h1>
+
+    <div class="mt-8 max-w-2xl space-y-4 leading-relaxed text-ink-300">
+      <p>
+        I'm a Unity developer with 3 years of commercial experience, mostly on mobile -
+        Android and iOS. I've worked in puzzle, casual, roguelike and arcade, both solo
+        and in small teams, and I've taken projects from a brief to a store release.
+      </p>
+      <p>
+        What I'm unusual for is that I also write the backend. I've built an ASP.NET
+        Core backend with auth, player data and leaderboards that shipped behind a live
+        game. That means I can take a mobile game from prototype to a released product
+        with real progression, not hand off the server part to someone else.
+      </p>
+      <p>
+        I care about systems that scale and about keeping games running on cheap
+        devices. Most of my work is config-driven so content and balancing don't require
+        a programmer, and I care about the boring reliability work - memory, remote
+        config with a local fallback, build pipelines - that decides whether a game is
+        still alive six months after launch.
+      </p>
+    </div>
+
+    <section class="mt-16">
+      <h2 class="section-title">Experience</h2>
+      <div class="mt-8 space-y-6">
+        {
+          experience.map((job) => (
+            <div class="card p-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 class="font-semibold tracking-tight">
+                  {job.role} <span class="text-ink-400 font-normal">- {job.company}</span>
+                </h3>
+                <span class="text-sm text-ink-400">{job.period}</span>
+              </div>
+              <ul class="mt-4 space-y-1.5 text-sm text-ink-300">
+                {job.points.map((point) => (
+                  <li class="flex gap-3">
+                    <span class="text-ink-600">&bull;</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="mt-16">
+      <h2 class="section-title">Stack</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          stack.map((group) => (
+            <div>
+              <h3 class="text-sm font-semibold text-ink-100">{group.group}</h3>
+              <ul class="mt-3 space-y-1.5">
+                {group.items.map((item) => (
+                  <li class="font-mono text-sm text-ink-400">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

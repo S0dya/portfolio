@@ -1,0 +1,111 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE } from '../consts';
+
+const projects = (await getCollection('projects')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+const services = [
+  {
+    title: 'Build a mobile game',
+    body: 'From a brief to a store release, or a working prototype of one mechanic. Monetization, Firebase or your own backend.',
+  },
+  {
+    title: 'Fix or improve an existing project',
+    body: 'Bugs, new features, performance, Android build issues, store submission.',
+  },
+  {
+    title: 'Add a backend',
+    body: 'Accounts, progression, cloud saves, leaderboards - for a game that has none, or an existing one that needs it.',
+  },
+];
+---
+
+<Base>
+  <Header />
+
+  <main>
+    <!-- Hero -->
+    <section class="container-page pt-20 pb-16 sm:pt-28 sm:pb-20">
+      <p class="text-sm font-medium text-accent-400">Unity Developer - Mobile & Backend</p>
+      <h1 class="mt-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        I build mobile games <span class="text-ink-400">and the servers behind them.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">
+        3 years of commercial experience on Android and iOS. Puzzle, casual, roguelike
+        and arcade. I also write the backend - ASP.NET Core, PostgreSQL, auth,
+        progression, leaderboards - so a game ships with progression, not a
+        placeholder.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <a href="/projects" class="btn-primary">See my work</a>
+        <a href="/contact" class="btn-ghost">Get in touch</a>
+      </div>
+      <p class="mt-6 text-sm text-ink-400">
+        {SITE.availability} &middot; {SITE.rate}
+      </p>
+    </section>
+
+    <!-- Featured projects -->
+    <section class="container-page py-16">
+      <h2 class="section-title">Featured work</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            href={`/projects/${project.id}`}
+            year={project.data.year}
+            platform={project.data.platform}
+            tags={project.data.tags}
+            status={project.data.status}
+            accent={project.data.accent}
+            video={project.data.video}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- What I do -->
+    <section class="container-page py-16">
+      <h2 class="section-title">What I do</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-3">
+        {
+          services.map((service) => (
+            <div class="card p-6">
+              <h3 class="font-semibold tracking-tight">{service.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-300">{service.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="container-page py-16">
+      <div class="card grid gap-8 p-8 sm:grid-cols-4">
+        <div>
+          <p class="text-3xl font-bold text-accent-400">33</p>
+          <p class="mt-1 text-sm text-ink-400">apps shipped from one template</p>
+        </div>
+        <div>
+          <p class="text-3xl font-bold text-accent-400">200+</p>
+          <p class="mt-1 text-sm text-ink-400">config-driven levels shipped</p>
+        </div>
+        <div>
+          <p class="text-3xl font-bold text-accent-400">70%</p>
+          <p class="mt-1 text-sm text-ink-400">less level-building time</p>
+        </div>
+        <div>
+          <p class="text-3xl font-bold text-accent-400">30%</p>
+          <p class="mt-1 text-sm text-ink-400">less runtime memory</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

@@ -1,0 +1,114 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { youtubeEmbed } from '../../lib/youtube';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const embedUrl = youtubeEmbed(project.data.video);
+
+const all = (await getCollection('projects')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const currentIndex = all.findIndex((p) => p.id === project.id);
+const next = all[(currentIndex + 1) % all.length];
+
+const statusLabel: Record<string, string> = {
+  live: 'Live',
+  released: 'Released',
+  'in-dev': 'In development',
+  backend: 'Backend',
+};
+---
+
+<Base title={project.data.title} description={project.data.description}>
+  <Header />
+
+  <main class="container-page pt-12 pb-16 sm:pt-16">
+    <a href="/projects" class="text-sm text-ink-400 hover:text-accent-400 transition-colors">
+      &larr; All projects
+    </a>
+
+    <div class="mt-8">
+      <div class="flex flex-wrap items-center gap-3">
+        <span
+          class="rounded-md px-2.5 py-1 text-xs font-medium"
+          style={`background-color: ${project.data.accent ?? '#4f7cff'}22; color: ${project.data.accent ?? '#4f7cff'}; border: 1px solid ${project.data.accent ?? '#4f7cff'}44;`}
+        >
+          {statusLabel[project.data.status] ?? project.data.status}
+        </span>
+        <span class="text-sm text-ink-400">{project.data.platform}</span>
+        <span class="text-sm text-ink-600">&middot;</span>
+        <span class="text-sm text-ink-400">{project.data.year}</span>
+      </div>
+
+      <h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">{project.data.title}</h1>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-300">{project.data.description}</p>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+      </div>
+
+      <div class="mt-6 text-sm text-ink-400">
+        <span class="text-ink-600">Role:</span> {project.data.role}
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        {project.data.play && (
+          <a href={project.data.play} target="_blank" rel="noopener noreferrer" class="btn-primary">
+            Play on Google Play
+          </a>
+        )}
+        {project.data.video && (
+          <a href={project.data.video} target="_blank" rel="noopener noreferrer" class="btn-ghost">
+            Watch gameplay
+          </a>
+        )}
+        {project.data.github && (
+          <a href={project.data.github} target="_blank" rel="noopener noreferrer" class="btn-ghost">
+            Source code
+          </a>
+        )}
+      </div>
+    </div>
+
+    {
+      embedUrl && (
+        <div class="mt-10 aspect-video overflow-hidden rounded-xl border border-ink-700 bg-ink-900">
+          <iframe
+            class="h-full w-full"
+            src={embedUrl}
+            title={`${project.data.title} gameplay`}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        </div>
+      )
+    }
+
+    <article class="prose-project mt-12 max-w-2xl">
+      <Content />
+    </article>
+
+    <div class="mt-16 border-t border-ink-800 pt-8">
+      <a href={`/projects/${next.id}`} class="group inline-flex items-center gap-3">
+        <div>
+          <p class="text-xs text-ink-400 uppercase tracking-wider">Next project</p>
+          <p class="mt-1 font-medium group-hover:text-accent-400 transition-colors">{next.data.title}</p>
+        </div>
+        <span class="text-ink-400 group-hover:text-accent-400 transition-colors">&rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</Base>

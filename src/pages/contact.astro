@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../consts';
+---
+
+<Base title="Contact" description="Contact Damir Mavliutov for freelance Unity and backend work.">
+  <Header />
+
+  <main class="container-page pt-16 pb-16 sm:pt-20">
+    <h1 class="text-4xl font-bold tracking-tight">Get in touch</h1>
+    <p class="mt-4 max-w-2xl text-lg text-ink-300">
+      Available for contract work. Tell me what the project is, what state it's in,
+      and what you need done.
+    </p>
+
+    <div class="mt-12 max-w-2xl space-y-6">
+      <a href={`mailto:${SITE.email}`} class="card card-hover flex items-center gap-4 p-6">
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent-500/15 text-xl text-accent-400">
+          @
+        </div>
+        <div>
+          <p class="font-medium">Email</p>
+          <p class="mt-0.5 text-sm text-ink-400">{SITE.email}</p>
+        </div>
+      </a>
+
+      <a href={SITE.github} target="_blank" rel="noopener noreferrer" class="card card-hover flex items-center gap-4 p-6">
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-ink-800 text-lg text-ink-300">
+          GH
+        </div>
+        <div>
+          <p class="font-medium">GitHub</p>
+          <p class="mt-0.5 text-sm text-ink-400">github.com/S0dya</p>
+        </div>
+      </a>
+
+      <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" class="card card-hover flex items-center gap-4 p-6">
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-ink-800 text-lg text-ink-300">
+          in
+        </div>
+        <div>
+          <p class="font-medium">LinkedIn</p>
+          <p class="mt-0.5 text-sm text-ink-400">linkedin.com/in/damir-m-80849128b</p>
+        </div>
+      </a>
+
+      <div class="card p-6">
+        <p class="font-medium">Working details</p>
+        <ul class="mt-4 space-y-2 text-sm text-ink-300">
+          <li><span class="text-ink-600">Rate:</span> {SITE.rate}</li>
+          <li><span class="text-ink-600">Availability:</span> {SITE.availability}</li>
+          <li><span class="text-ink-600">Location:</span> {SITE.location}</li>
+          <li><span class="text-ink-600">Payment:</span> Wise or crypto, invoiced as a registered company</li>
+        </ul>
+        <p class="mt-5 border-t border-ink-800 pt-5 text-sm text-ink-400">
+          Paid work only, no rev share.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Base>

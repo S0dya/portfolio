@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base title="Not found">
+  <Header />
+
+  <main class="container-page flex flex-1 items-center justify-center py-24 text-center">
+    <div>
+      <p class="text-6xl font-bold text-ink-700">404</p>
+      <h1 class="mt-4 text-2xl font-semibold">Page not found</h1>
+      <p class="mt-2 text-ink-400">That page does not exist.</p>
+      <a href="/" class="btn-primary mt-8">Back home</a>
+    </div>
+  </main>
+
+  <Footer />
+</Base>

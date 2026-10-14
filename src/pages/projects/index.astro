@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<Base title="Projects" description="Projects by Damir Mavliutov - Unity mobile games and backend work.">
+  <Header />
+
+  <main class="container-page pt-16 pb-16 sm:pt-20">
+    <h1 class="text-4xl font-bold tracking-tight">Projects</h1>
+    <p class="mt-4 max-w-2xl text-lg text-ink-300">
+      Mobile games I built and shipped, and the backend behind them.
+    </p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            href={`/projects/${project.id}`}
+            year={project.data.year}
+            platform={project.data.platform}
+            tags={project.data.tags}
+            status={project.data.status}
+            accent={project.data.accent}
+            video={project.data.video}
+          />
+        ))
+      }
+    </div>
+  </main>
+
+  <Footer />
+</Base>
