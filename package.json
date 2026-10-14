@@ -12,11 +12,15 @@
     "astro": "astro"
   },
   "devDependencies": {
-    "@astrojs/sitemap": "^3.6.0"
+    "@astrojs/sitemap": "^3.6.0",
+    "wrangler": "^4.151.0"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.8",
     "tailwindcss": "^4.3.3"
+  },
+  "allowScripts": {
+    "workerd@1.20261012.1": true
   }
 }
