@@ -7,6 +7,7 @@ status: "closed"
 category: "freelance"
 platform: "PC - Photon Fusion"
 cover: "/media/projects/jelly-battle.gif"
+coverThumb: "/media/projects/thumbs/jelly-battle.gif"
 coverWidth: 600
 coverHeight: 338
 coverIsGif: true

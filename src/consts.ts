@@ -204,10 +204,3 @@ export const OTHER_SKILLS = [
   { name: 'Photoshop', detail: 'Basic image editing' },
   { name: 'Aseprite', detail: 'Pixel art and 2D sprites' },
 ] as const;
-
-export const STATS = [
-  { value: '3', label: 'years in Unity, all remote' },
-  { value: '30+', label: 'Android and iOS titles shipped to the store' },
-  { value: '200+', label: 'config-driven levels, 70% less build time' },
-  { value: '30%', label: 'less runtime memory on low-end devices' },
-] as const;
