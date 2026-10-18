@@ -1,0 +1,64 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="Nexus API routes">
+  <rect width="640" height="400" fill="#1E1F22"/>
+  <g stroke="#2B2D30" stroke-width="1">
+    <path d="M0 44h640M0 88h640M0 132h640M0 176h640M0 220h640M0 264h640M0 308h640M0 352h640"/>
+  </g>
+  <g stroke="#26282C" stroke-width="1">
+    <path d="M40 0v400M96 0v400M200 0v400M340 0v400M480 0v400"/>
+  </g>
+
+  <rect x="0" y="0" width="640" height="28" fill="#2B2D30"/>
+  <text x="14" y="19" font-family="JetBrains Mono, Consolas, monospace" font-size="12" fill="#8C8F94">/api/routes</text>
+  <circle cx="600" cy="14" r="4" fill="#6AAB73"/>
+  <circle cx="616" cy="14" r="4" fill="#D0BC4E"/>
+
+  <g font-family="JetBrains Mono, Consolas, monospace" font-size="14">
+    <text x="14" y="66" fill="#6E7178">1</text>
+    <text x="56" y="66" fill="#BC3FBC">[HttpPost]</text>
+    <text x="152" y="66" fill="#BCBEC4">/api/auth/refresh</text>
+    <text x="520" y="66" fill="#56A8F5">200</text>
+
+    <text x="14" y="110" fill="#6E7178">2</text>
+    <text x="56" y="110" fill="#6AAB73">[HttpGet]</text>
+    <text x="140" y="110" fill="#BCBEC4">/api/save/{version}</text>
+    <text x="520" y="110" fill="#56A8F5">200</text>
+
+    <text x="14" y="154" fill="#6E7178">3</text>
+    <text x="56" y="154" fill="#6AAB73">[HttpGet]</text>
+    <text x="140" y="154" fill="#BCBEC4">/api/save</text>
+    <text x="520" y="154" fill="#E06C75">409</text>
+
+    <text x="14" y="198" fill="#6E7178">4</text>
+    <text x="56" y="198" fill="#6AAB73">[HttpGet]</text>
+    <text x="140" y="198" fill="#BCBEC4">/api/leaderboard</text>
+    <text x="520" y="198" fill="#56A8F5">200</text>
+
+    <text x="14" y="242" fill="#6E7178">5</text>
+    <text x="56" y="242" fill="#BC3FBC">[HttpPost]</text>
+    <text x="152" y="242" fill="#BCBEC4">/api/shop/purchase</text>
+    <text x="520" y="242" fill="#56A8F5">201</text>
+
+    <text x="14" y="286" fill="#6E7178">6</text>
+    <text x="56" y="286" fill="#6AAB73">[HttpGet]</text>
+    <text x="140" y="286" fill="#BCBEC4">/api/config</text>
+    <text x="520" y="286" fill="#56A8F5">200</text>
+  </g>
+
+  <g stroke="#393B40" stroke-width="1">
+    <path d="M40 44v308"/>
+    <path d="M96 44v308"/>
+    <path d="M200 44v308"/>
+    <path d="M340 44v308"/>
+    <path d="M480 44v308"/>
+  </g>
+
+  <rect x="0" y="352" width="640" height="48" fill="#2B2D30"/>
+  <g font-family="JetBrains Mono, Consolas, monospace" font-size="12" fill="#8C8F94">
+    <text x="14" y="381">ASP.NET Core</text>
+    <text x="140" y="381">PostgreSQL</text>
+    <text x="268" y="381">Redis</text>
+    <text x="336" y="381">EF Core</text>
+    <text x="424" y="381">JWT</text>
+    <text x="486" y="381">Docker</text>
+  </g>
+</svg>

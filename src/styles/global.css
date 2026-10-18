@@ -1,27 +1,44 @@
 @import "tailwindcss";
 
+/* Rider Dark palette - JetBrains IDE colours */
 @theme {
-  --color-ink-950: #08090c;
-  --color-ink-900: #0d0f14;
-  --color-ink-800: #14171f;
-  --color-ink-700: #1d2130;
-  --color-ink-600: #2a2f42;
-  --color-ink-400: #7c849c;
-  --color-ink-300: #a8b0c7;
-  --color-ink-100: #e6e9f2;
+  --color-ink-950: #1e1f22;
+  --color-ink-900: #232428;
+  --color-ink-850: #26282c;
+  --color-ink-800: #2b2d30;
+  --color-ink-750: #2f3135;
+  --color-ink-700: #313335;
+  --color-ink-600: #393b40;
+  --color-ink-500: #45474c;
+  --color-ink-450: #9a9da3;
+  --color-ink-400: #94979d;
+  --color-ink-300: #a8abb2;
+  --color-ink-200: #c3c6cc;
+  --color-ink-100: #d4d7dc;
+  --color-ink-50: #e4e6ea;
 
-  --color-accent-500: #4f7cff;
-  --color-accent-400: #6b90ff;
-  --color-accent-300: #96b0ff;
+  --color-accent-700: #8a5c86;
+  --color-accent-600: #95648f;
+  --color-accent-500: #b88bb4;
+  --color-accent-400: #c79dc4;
+  --color-accent-300: #ddbcd9;
+
+  --color-green: #6aab73;
+  --color-yellow: #d0bc4e;
+  --color-orange: #e8a33d;
+  --color-red: #e06c75;
+  --color-purple: #c771c7;
+  --color-cyan: #56a8f5;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     background-color: var(--color-ink-950);
+    color-scheme: dark;
   }
 
   body {
@@ -30,112 +47,288 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
   }
 
   ::selection {
-    background-color: var(--color-accent-500);
-    color: white;
+    background-color: color-mix(in srgb, var(--color-accent-500) 40%, transparent);
+    color: #fff;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent-400);
-    outline-offset: 3px;
-    border-radius: 4px;
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-600);
+    border: 2px solid var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-500);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Visible only when focused - lets keyboard users jump past the nav */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-accent-500);
+    color: #12100f;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.65rem 1rem;
+    border-radius: 0 0 3px 0;
+  }
+  .skip-link:focus {
+    left: 0;
   }
 }
 
 @layer components {
   .container-page {
-    max-width: 68rem;
+    max-width: 72rem;
     margin-inline: auto;
     padding-inline: 1.5rem;
   }
 
-  .card {
-    background-color: var(--color-ink-900);
-    border: 1px solid var(--color-ink-700);
-    border-radius: 1rem;
-    transition: border-color 200ms ease, transform 200ms ease, background-color 200ms ease;
+  /* narrower reading column, used on project detail pages */
+  .container-narrow {
+    max-width: 56rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
   }
 
-  .card-hover:hover {
-    border-color: var(--color-ink-600);
+  /* Faint editor grid behind everything */
+  .bg-grid {
+    background-image:
+      linear-gradient(var(--color-ink-800) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-ink-800) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center top;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
+  }
+
+  /* ---------- IDE panel ---------- */
+  .panel {
     background-color: var(--color-ink-800);
+    border: 1px solid var(--color-ink-600);
+    border-radius: 3px;
+  }
+
+  .panel-hover {
+    transition:
+      border-color 140ms ease,
+      background-color 140ms ease,
+      transform 140ms ease;
+  }
+  .panel-hover:hover {
+    border-color: color-mix(in srgb, var(--color-accent-500) 55%, var(--color-ink-600));
+    background-color: var(--color-ink-750);
     transform: translateY(-2px);
   }
 
-  .btn-primary {
+  /* ---------- Buttons ---------- */
+  /* Sharp corners, thin border, accent edge - deliberately not a pill */
+  .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: var(--color-accent-500);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
     font-weight: 500;
-    transition: background-color 200ms ease;
+    letter-spacing: 0.01em;
+    border: 1px solid transparent;
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease,
+      color 140ms ease,
+      transform 140ms ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
   }
 
+  .btn-primary {
+    background-color: var(--color-accent-500);
+    color: #0f1115;
+    border-color: var(--color-accent-400);
+    font-weight: 600;
+  }
   .btn-primary:hover {
     background-color: var(--color-accent-400);
+    border-color: var(--color-accent-300);
+  }
+  .btn-primary::before {
+    content: "❯";
+    opacity: 0.7;
+    font-size: 0.7em;
   }
 
   .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid var(--color-ink-600);
-    color: var(--color-ink-100);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    transition: border-color 200ms ease, background-color 200ms ease;
+    background-color: transparent;
+    color: var(--color-ink-200);
+    border-color: var(--color-ink-600);
   }
-
   .btn-ghost:hover {
-    border-color: var(--color-ink-400);
-    background-color: var(--color-ink-800);
+    border-color: var(--color-accent-500);
+    color: var(--color-accent-300);
+    background-color: var(--color-ink-850);
   }
 
-  .tag {
-    display: inline-block;
-    background-color: var(--color-ink-800);
-    border: 1px solid var(--color-ink-700);
-    color: var(--color-ink-300);
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
+  .btn-sm {
+    padding: 0.4rem 0.75rem;
     font-size: 0.75rem;
-    line-height: 1rem;
+  }
+
+  /* ---------- Mono chip ---------- */
+  .chip {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.5rem;
+    padding-inline: 0.45rem;
+    color: var(--color-ink-300);
+    background-color: var(--color-ink-850);
+    border: 1px solid var(--color-ink-600);
+    border-radius: 2px;
     white-space: nowrap;
   }
+  .chip::before {
+    content: "";
+  }
 
+  /* ---------- Section header, styled like an IDE tool-window label ---------- */
   .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
     font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    color: var(--color-ink-300);
+  }
+  .section-title .idx {
+    color: var(--color-accent-500);
+  }
+  .section-title .rule {
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-ink-600);
+  }
+
+  /* ---------- File-breadcrumb ---------- */
+  .crumbs {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     color: var(--color-ink-400);
+  }
+  .crumbs .sep {
+    color: var(--color-ink-400);
+    padding-inline: 0.35rem;
+  }
+  .crumbs .cur {
+    color: var(--color-accent-400);
+  }
+
+  /* ---------- Status pill (like an IDE inspection badge) ---------- */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    border: 1px solid currentColor;
+    background-color: color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  /* ---------- Link with animated underline ---------- */
+  .link-underline {
+    position: relative;
+    color: var(--color-ink-300);
+    transition: color 140ms ease;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: var(--color-accent-500);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 160ms ease;
+  }
+  .link-underline:hover {
+    color: var(--color-ink-50);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
   }
 }
 
 /* Markdown rendered inside project pages */
 .prose-project {
-  line-height: 1.75;
-  color: var(--color-ink-300);
-}
+    line-height: 1.75;
+    color: var(--color-ink-200);
+  }
+  /* Markdown images carry no width/height attributes, so the browser cannot
+     reserve their box. Cap them and let them scale instead of shifting. */
+  .prose-project img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-inline: auto;
+    border: 1px solid var(--color-ink-700);
+    border-radius: 3px;
+    background: var(--color-ink-850);
+  }
 .prose-project h2 {
-  color: var(--color-ink-100);
-  font-size: 1.25rem;
+  color: var(--color-ink-50);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
   font-weight: 600;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+  margin-top: 2.25rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-ink-700);
 }
 .prose-project h3 {
   color: var(--color-ink-100);
-  font-size: 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
   font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.6rem;
+  color: var(--color-ink-300);
 }
 .prose-project p {
   margin-bottom: 1rem;
@@ -146,25 +339,42 @@
   padding-left: 1.25rem;
 }
 .prose-project ul {
-  list-style: disc;
+  list-style: none;
+}
+.prose-project ul li {
+  position: relative;
+}
+.prose-project ul li::before {
+  content: "▸";
+  position: absolute;
+  left: -1.05rem;
+  color: var(--color-accent-500);
+  opacity: 0.8;
 }
 .prose-project ol {
   list-style: decimal;
 }
 .prose-project li {
-  margin-bottom: 0.375rem;
+  margin-bottom: 0.45rem;
 }
 .prose-project strong {
-  color: var(--color-ink-100);
+  color: var(--color-ink-50);
   font-weight: 600;
 }
-.prose-project code {
-  background-color: var(--color-ink-800);
-  color: var(--color-accent-300);
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
+.prose-project em {
+  color: var(--color-ink-100);
+  font-style: normal;
   font-family: var(--font-mono);
-  font-size: 0.875em;
+  font-size: 0.9em;
+  color: var(--color-accent-300);
+}
+.prose-project code {
+  background-color: var(--color-ink-850);
+  color: var(--color-accent-300);
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
 }
 .prose-project a {
   color: var(--color-accent-400);
@@ -173,4 +383,13 @@
 }
 .prose-project a:hover {
   color: var(--color-accent-300);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .panel-hover:hover {
+    transform: none;
+  }
 }

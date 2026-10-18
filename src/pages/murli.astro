@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base title="Murli" description="Murli.">
+  <Header />
+
+  <main id="main" class="container-narrow flex flex-1 flex-col items-center justify-center py-16">
+    <h1 class="font-mono text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">Murli</h1>
+    <div class="mt-8 w-full overflow-hidden rounded-[3px] border border-ink-700 bg-ink-900">
+      <img
+        src="/media/murli/murli.jpg"
+        alt="Murli"
+        width={3072}
+        height={4080}
+        loading="eager"
+        decoding="async"
+        class="h-auto w-full"
+      />
+    </div>
+    <a href="/about" class="btn btn-ghost mt-10">&larr; back</a>
+  </main>
+
+  <Footer />
+</Base>

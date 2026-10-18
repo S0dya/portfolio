@@ -2,62 +2,148 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE } from '../consts';
+import Icon from '../components/Icon.astro';
+import { SITE, SOCIAL } from '../consts';
+
+const channels = [
+  {
+    label: 'Email',
+    value: SITE.email,
+    href: `mailto:${SITE.email}`,
+    icon: 'mail',
+  },
+  {
+    label: 'Telegram',
+    value: '@damirsdnnp',
+    href: SITE.telegram,
+    icon: 'telegram',
+  },
+  {
+    label: 'Discord',
+    value: 'pyps1ch',
+    href: null,
+    icon: 'discord',
+  },
+  {
+    label: 'LinkedIn',
+    value: '/in/damir-m-80849128b',
+    href: SITE.linkedin,
+    icon: 'linkedin',
+  },
+];
 ---
 
-<Base title="Contact" description="Contact Damir Mavliutov for freelance Unity and backend work.">
+<Base
+  title="Contact"
+  description="Contact Sodya - Unity developer and ASP.NET Core backend developer."
+>
   <Header />
 
-  <main class="container-page pt-16 pb-16 sm:pt-20">
-    <h1 class="text-4xl font-bold tracking-tight">Get in touch</h1>
-    <p class="mt-4 max-w-2xl text-lg text-ink-300">
-      Available for contract work. Tell me what the project is, what state it's in,
-      and what you need done.
-    </p>
+  <main id="main" class="container-page pt-14 pb-16 sm:pt-16">
+    <h1 class="text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">Contact me</h1>
 
-    <div class="mt-12 max-w-2xl space-y-6">
-      <a href={`mailto:${SITE.email}`} class="card card-hover flex items-center gap-4 p-6">
-        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent-500/15 text-xl text-accent-400">
-          @
-        </div>
-        <div>
-          <p class="font-medium">Email</p>
-          <p class="mt-0.5 text-sm text-ink-400">{SITE.email}</p>
-        </div>
-      </a>
+    <div class="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+      <div class="space-y-3">
+        {
+          channels.map((channel) => {
+            const inner = (
+              <>
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-850 text-accent-400 transition-colors group-hover:border-accent-500">
+                  <Icon name={channel.icon} class="h-5 w-5" />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-mono text-sm font-medium text-ink-100">{channel.label}</p>
+                  <p class="mt-0.5 truncate font-mono text-xs text-ink-300">{channel.value}</p>
+                </div>
+                {channel.href && (
+                  <span class="shrink-0 text-ink-400 transition-transform group-hover:translate-x-1 group-hover:text-accent-400">
+                    →
+                  </span>
+                )}
+              </>
+            );
+            return channel.href ? (
+              <a
+                href={channel.href}
+                target={channel.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel="noopener noreferrer"
+                class="panel panel-hover group flex items-center gap-5 p-5"
+              >
+                {inner}
+              </a>
+            ) : (
+              <div class="panel flex items-center gap-5 p-5">{inner}</div>
+            );
+          })
+        }
 
-      <a href={SITE.github} target="_blank" rel="noopener noreferrer" class="card card-hover flex items-center gap-4 p-6">
-        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-ink-800 text-lg text-ink-300">
-          GH
-        </div>
-        <div>
-          <p class="font-medium">GitHub</p>
-          <p class="mt-0.5 text-sm text-ink-400">github.com/S0dya</p>
-        </div>
-      </a>
-
-      <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" class="card card-hover flex items-center gap-4 p-6">
-        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-ink-800 text-lg text-ink-300">
-          in
-        </div>
-        <div>
-          <p class="font-medium">LinkedIn</p>
-          <p class="mt-0.5 text-sm text-ink-400">linkedin.com/in/damir-m-80849128b</p>
-        </div>
-      </a>
-
-      <div class="card p-6">
-        <p class="font-medium">Working details</p>
-        <ul class="mt-4 space-y-2 text-sm text-ink-300">
-          <li><span class="text-ink-600">Rate:</span> {SITE.rate}</li>
-          <li><span class="text-ink-600">Availability:</span> {SITE.availability}</li>
-          <li><span class="text-ink-600">Location:</span> {SITE.location}</li>
-          <li><span class="text-ink-600">Payment:</span> Wise or crypto, invoiced as a registered company</li>
-        </ul>
-        <p class="mt-5 border-t border-ink-800 pt-5 text-sm text-ink-400">
-          Paid work only, no rev share.
-        </p>
+        <a
+          href={SITE.resume}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="panel panel-hover group flex items-center gap-5 p-5"
+        >
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-850 text-accent-400 transition-colors group-hover:border-accent-500">
+            <Icon name="cv" class="h-5 w-5" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="font-mono text-sm font-medium text-ink-100">Resume</p>
+            <p class="mt-0.5 font-mono text-xs text-ink-300">PDF, Google Drive</p>
+          </div>
+          <span class="shrink-0 text-ink-400 transition-transform group-hover:translate-x-1 group-hover:text-accent-400">
+            →
+          </span>
+        </a>
       </div>
+
+      <aside class="space-y-4">
+        <div class="panel p-5">
+          <p class="border-b border-ink-700 pb-3 font-mono text-xs text-ink-400">other links</p>
+          <div class="mt-4 space-y-2.5">
+            {
+              SOCIAL.filter((s) => s.href).map((item) => (
+                <a
+                  href={item.href!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group flex items-center gap-3 font-mono text-xs"
+                >
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors group-hover:border-accent-500 group-hover:text-accent-400">
+                    <Icon name={item.glyph} class="h-4 w-4" />
+                  </span>
+                  <span class="text-ink-300 transition-colors group-hover:text-ink-50">{item.label}</span>
+                  <span class="ml-auto truncate text-ink-400">{item.handle}</span>
+                </a>
+              ))
+            }
+            <span class="flex items-center gap-3 font-mono text-xs">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300">
+                <Icon name="discord" class="h-4 w-4" />
+              </span>
+              <span class="text-ink-300">Discord</span>
+              <span class="ml-auto text-ink-400">pyps1ch</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="panel p-5">
+          <p class="border-b border-ink-700 pb-3 font-mono text-xs text-ink-400">location</p>
+          <dl class="mt-4 space-y-3 font-mono text-xs">
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Based in</dt>
+              <dd class="text-right text-ink-100">Armenia</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Timezone</dt>
+              <dd class="text-right text-ink-100">UTC+4</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Remote</dt>
+              <dd class="text-right text-ink-100">Worldwide</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
     </div>
   </main>
 

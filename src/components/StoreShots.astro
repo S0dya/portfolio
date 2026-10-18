@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../consts';
+
+interface Props {
+  shots: string[];
+  href: string;
+  /** 'Play Store' | 'Google Play' */
+  store: string;
+  title?: string;
+}
+
+const { shots, href, store, title = 'On Google Play' } = Astro.props;
+---
+
+{
+  shots.length > 0 && (
+    <section class="mt-10 min-w-0">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <h2 class="font-mono text-sm font-semibold tracking-tight text-ink-50">{title}</h2>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group inline-flex items-center gap-1.5 font-mono text-xs text-ink-300 transition-colors hover:text-accent-400"
+        >
+          <Icon name="googleplay" class="h-3.5 w-3.5" />
+          {store}
+          <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+        </a>
+      </div>
+
+      <div class="mt-4 flex max-w-full gap-3 overflow-x-auto pb-1">
+        {shots.map((shot, i) => (
+          <img
+            src={shot}
+            alt={`${title} screenshot ${i + 1}`}
+            loading="lazy"
+            decoding="async"
+            width={272}
+            height={592}
+            class="h-auto w-[9.5rem] shrink-0 rounded-[3px] border border-ink-700 bg-ink-850"
+          />
+        ))}
+      </div>
+    </section>
+  )
+}

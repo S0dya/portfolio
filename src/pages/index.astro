@@ -3,106 +3,221 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { SITE } from '../consts';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import { boldParts } from '../lib/bold';
+import { SITE, EXPERIENCE, EXPERIENCE_SHORT } from '../consts';
+import { CATEGORY, CATEGORY_ORDER } from '../lib/labels';
 
-const projects = (await getCollection('projects')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const all = await getCollection('projects');
+const featured = all
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
 
-const services = [
-  {
-    title: 'Build a mobile game',
-    body: 'From a brief to a store release, or a working prototype of one mechanic. Monetization, Firebase or your own backend.',
-  },
-  {
-    title: 'Fix or improve an existing project',
-    body: 'Bugs, new features, performance, Android build issues, store submission.',
-  },
-  {
-    title: 'Add a backend',
-    body: 'Accounts, progression, cloud saves, leaderboards - for a game that has none, or an existing one that needs it.',
-  },
-];
+/* Full index of every project, grouped the same way as /projects so the two
+   pages stay recognisably the same site. */
+const groups = CATEGORY_ORDER.map((key) => ({
+  meta: CATEGORY[key],
+  items: all.filter((p) => p.data.category === key).sort((a, b) => a.data.order - b.data.order),
+})).filter((g) => g.items.length > 0);
 ---
 
 <Base>
   <Header />
 
-  <main>
-    <!-- Hero -->
-    <section class="container-page pt-20 pb-16 sm:pt-28 sm:pb-20">
-      <p class="text-sm font-medium text-accent-400">Unity Developer - Mobile & Backend</p>
-      <h1 class="mt-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-        I build mobile games <span class="text-ink-400">and the servers behind them.</span>
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">
-        3 years of commercial experience on Android and iOS. Puzzle, casual, roguelike
-        and arcade. I also write the backend - ASP.NET Core, PostgreSQL, auth,
-        progression, leaderboards - so a game ships with progression, not a
-        placeholder.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center gap-4">
-        <a href="/projects" class="btn-primary">See my work</a>
-        <a href="/contact" class="btn-ghost">Get in touch</a>
+  <!-- ───────────────────────── Summary ───────────────────────── -->
+  <section class="relative overflow-hidden border-b border-ink-700">
+    <div class="bg-grid pointer-events-none absolute inset-0 opacity-60"></div>
+    <div class="container-page relative pt-14 pb-14 sm:pt-20 sm:pb-16">
+      <div class="max-w-3xl">
+        <p class="font-mono text-xs tracking-widest text-accent-400 uppercase">
+          Unity Developer - Mobile Games &amp; Game Backend
+        </p>
+
+        <h1 class="sr-only">Sodya - Unity Developer</h1>
+
+        <p class="mt-7 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
+          Unity developer with {SITE.years} years of experience in mobile games from prototype
+          to release. I like building the systems under a game: mechanics, config-driven
+          tools, templates, and the server side when a game needs it.
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <a href="/projects" class="btn btn-primary">View projects</a>
+          <a href={SITE.resume} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+            Resume (PDF)
+          </a>
+        </div>
       </div>
-      <p class="mt-6 text-sm text-ink-400">
-        {SITE.availability} &middot; {SITE.rate}
-      </p>
+    </div>
+  </section>
+
+  <main id="main" class="flex-1">
+    <!-- ─────────────────── 01 · Featured work ─────────────────── -->
+    <section class="border-b border-ink-700 bg-ink-900 py-16 sm:py-20">
+      <div class="container-page">
+        <SectionTitle index="01" title="Featured work" />
+
+        <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {
+            featured.map((project) => (
+              <ProjectCard
+                title={project.data.title}
+                summary={project.data.summary}
+                href={`/projects/${project.id}`}
+                year={project.data.year}
+                platform={project.data.platform}
+                category={project.data.category}
+                status={project.data.status}
+                tags={project.data.tags.slice(0, 4)}
+                cover={project.data.cover}
+                coverThumb={project.data.coverThumb}
+                coverIsGif={project.data.coverIsGif}
+                coverWidth={project.data.coverWidth}
+                coverHeight={project.data.coverHeight}
+                accent={project.data.accent}
+                client={project.data.client}
+                play={project.data.play}
+                itch={project.data.itch}
+                github={project.data.github}
+                githubLabel={project.data.githubLabel}
+                githubBackend={project.data.githubBackend}
+                githubBackendLabel={project.data.githubBackendLabel}
+              />
+            ))
+          }
+        </div>
+
+        <div class="mt-8">
+          <a href="/projects" class="btn btn-ghost">All projects</a>
+        </div>
+      </div>
     </section>
 
-    <!-- Featured projects -->
-    <section class="container-page py-16">
-      <h2 class="section-title">Featured work</h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            href={`/projects/${project.id}`}
-            year={project.data.year}
-            platform={project.data.platform}
-            tags={project.data.tags}
-            status={project.data.status}
-            accent={project.data.accent}
-            video={project.data.video}
-          />
-        ))}
-      </div>
-    </section>
+    <!-- ─────────────────── 02 · Experience ─────────────────── -->
+    <section class="container-page py-16 sm:py-20">
+      <SectionTitle index="02" title="Experience" />
 
-    <!-- What I do -->
-    <section class="container-page py-16">
-      <h2 class="section-title">What I do</h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      <div class="mt-10 space-y-4">
         {
-          services.map((service) => (
-            <div class="card p-6">
-              <h3 class="font-semibold tracking-tight">{service.title}</h3>
-              <p class="mt-2 text-sm leading-relaxed text-ink-300">{service.body}</p>
-            </div>
-          ))
+          EXPERIENCE.map((job) => {
+            const points = EXPERIENCE_SHORT[job.company] ?? job.points;
+            return (
+              <article class="panel panel-hover overflow-hidden">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-ink-700 bg-ink-850 px-5 py-3">
+                  <div class="flex flex-wrap items-baseline gap-x-3">
+                    <h3 class="font-mono text-base font-semibold text-ink-50">{job.company}</h3>
+                    <span class="text-sm text-ink-300">{job.role}</span>
+                  </div>
+                  <div class="flex items-center gap-3 font-mono text-xs text-ink-300">
+                    <span>{job.period}</span>
+                    <span class="rounded-[2px] border border-ink-600 px-1.5 py-0.5 text-ink-400">
+                      {job.mode}
+                    </span>
+                  </div>
+                </div>
+                <div class="px-5 py-5">
+                  <ul class="space-y-2.5">
+                    {points.map((point) => (
+                      <li class="flex gap-3 text-sm leading-relaxed text-ink-200">
+                        <span class="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-accent-500" />
+                        <span>
+                          {boldParts(point).map((part) =>
+                            part.bold ? (
+                              <strong class="font-semibold text-ink-50">{part.text}</strong>
+                            ) : (
+                              part.text
+                            )
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  {'storeLink' in job && job.storeLink && (
+                    <a
+                      href={job.storeLink.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-ghost btn-sm mt-5"
+                    >
+                      <Icon name="googleplay" class="h-3.5 w-3.5" />
+                      {job.storeLink.label}
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })
         }
       </div>
     </section>
 
-    <!-- Stats -->
-    <section class="container-page py-16">
-      <div class="card grid gap-8 p-8 sm:grid-cols-4">
-        <div>
-          <p class="text-3xl font-bold text-accent-400">33</p>
-          <p class="mt-1 text-sm text-ink-400">apps shipped from one template</p>
+    <!-- ─────────────────── 03 · Other projects ─────────────────── -->
+    <section class="border-y border-ink-700 bg-ink-900 py-16 sm:py-20">
+      <div class="container-page">
+        <SectionTitle index="03" title="Other projects" />
+
+        <div class="mt-10 space-y-12">
+          {
+            groups.map((group) => (
+              <div>
+                <h3 class="font-mono text-sm font-semibold tracking-wide text-ink-50">
+                  <span style={`color: ${group.meta.color}`}>#</span> {group.meta.label}
+                </h3>
+
+                <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.items.map((project) => (
+                    <a
+                      href={`/projects/${project.id}`}
+                      class="panel panel-hover group flex min-w-0 items-start gap-4 p-4"
+                    >
+                      <div class="h-16 w-16 shrink-0 overflow-hidden rounded-[2px] border border-ink-600 bg-ink-900">
+                        {project.data.cover && (
+                          <img
+                            src={project.data.coverThumb ?? project.data.cover}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            width={project.data.coverWidth}
+                            height={project.data.coverHeight}
+                            class="h-full w-full object-cover"
+                          />
+                        )}
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <p class="truncate font-mono text-sm font-medium text-ink-50 transition-colors group-hover:text-accent-400">
+                          {project.data.title}
+                        </p>
+                        <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-ink-400">
+                          {project.data.summary}
+                        </p>
+                        <p class="mt-1.5 font-mono text-[0.625rem] text-ink-400">
+                          {project.data.year}
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
         </div>
-        <div>
-          <p class="text-3xl font-bold text-accent-400">200+</p>
-          <p class="mt-1 text-sm text-ink-400">config-driven levels shipped</p>
+
+        <div class="mt-10">
+          <a href="/projects" class="btn btn-ghost">All projects</a>
         </div>
-        <div>
-          <p class="text-3xl font-bold text-accent-400">70%</p>
-          <p class="mt-1 text-sm text-ink-400">less level-building time</p>
-        </div>
-        <div>
-          <p class="text-3xl font-bold text-accent-400">30%</p>
-          <p class="mt-1 text-sm text-ink-400">less runtime memory</p>
-        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────── 04 · Skills ─────────────────── -->
+    <section class="container-page py-16 sm:py-20">
+      <SectionTitle index="04" title="Skills" />
+
+      <div class="mt-10">
+        <SkillsGrid variant="short" />
       </div>
     </section>
   </main>

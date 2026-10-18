@@ -2,119 +2,220 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE } from '../consts';
-
-const stack = [
-  { group: 'Client', items: ['Unity', 'C#', 'Zenject', 'UniTask', 'UniRx', 'DOTween', 'Addressables', 'ScriptableObjects'] },
-  { group: 'Backend', items: ['ASP.NET Core', 'PostgreSQL', 'EF Core', 'REST', 'JWT'] },
-  { group: 'Mobile', items: ['Unity IAP', 'Firebase', 'AppsFlyer', 'UniWebView', 'IL2CPP'] },
-  { group: 'Tools', items: ['Git', 'CI/CD', 'Swagger', 'Bruno'] },
-];
-
-const experience = [
-  {
-    role: 'Unity Developer',
-    company: 'PinkThing',
-    period: '2023 - 2026',
-    points: [
-      'Shipped a match 3 puzzle game to Google Play',
-      'Config-driven level generation for 200+ levels, ~70% less build time',
-      'Built the ASP.NET backend: JWT auth, EF Core, PostgreSQL',
-      'Cut runtime memory ~30% for low-end devices',
-    ],
-  },
-  {
-    role: 'Unity Developer',
-    company: 'Syndicate Group',
-    period: '2025 - 2026',
-    points: [
-      '33 mobile apps in 14 months from one reusable template',
-      'Reskins cut to 2-4 hours with zero new code',
-      'iOS builds through company CI',
-    ],
-  },
-  {
-    role: 'Unity Programmer',
-    company: 'PlayGenes',
-    period: '2024 - 2025',
-    points: [
-      'Modular minigame framework, ~40% less time per new variant',
-      'Worked in a large legacy codebase',
-    ],
-  },
-];
+import SectionTitle from '../components/SectionTitle.astro';
+import Icon from '../components/Icon.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import { boldParts } from '../lib/bold';
+import { SITE, EXPERIENCE, OTHER_SKILLS } from '../consts';
 ---
 
-<Base title="About" description="About Damir Mavliutov - Unity developer working on mobile games and backend.">
+<Base
+  title="About"
+  description="About Sodya - Unity developer, 3 years shipping mobile games on Android and iOS, with hands-on ASP.NET Core backend experience."
+>
   <Header />
 
-  <main class="container-page pt-16 pb-16 sm:pt-20">
-    <h1 class="text-4xl font-bold tracking-tight">About</h1>
+  <main id="main" class="container-page pt-14 pb-16 sm:pt-16">
+    <h1 class="text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">About</h1>
 
-    <div class="mt-8 max-w-2xl space-y-4 leading-relaxed text-ink-300">
-      <p>
-        I'm a Unity developer with 3 years of commercial experience, mostly on mobile -
-        Android and iOS. I've worked in puzzle, casual, roguelike and arcade, both solo
-        and in small teams, and I've taken projects from a brief to a store release.
-      </p>
-      <p>
-        What I'm unusual for is that I also write the backend. I've built an ASP.NET
-        Core backend with auth, player data and leaderboards that shipped behind a live
-        game. That means I can take a mobile game from prototype to a released product
-        with real progression, not hand off the server part to someone else.
-      </p>
-      <p>
-        I care about systems that scale and about keeping games running on cheap
-        devices. Most of my work is config-driven so content and balancing don't require
-        a programmer, and I care about the boring reliability work - memory, remote
-        config with a local fallback, build pipelines - that decides whether a game is
-        still alive six months after launch.
-      </p>
+    <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+      <div>
+<div class="space-y-5 text-base leading-relaxed text-ink-200">
+          <p>
+            Unity Developer with {SITE.years} years of experience building and shipping
+            Android/iOS games, from gameplay prototypes to production releases.
+          </p>
+          <p>
+            I build reusable gameplay systems, development tools, and client-server features
+            using Unity, C#, and ASP.NET Core. Comfortable owning features end to end, from
+            implementation to integration and release.
+          </p>
+        </div>
+
+        <section class="mt-16">
+          <SectionTitle index="01" title="Experience" />
+          <div class="mt-8 space-y-4">
+            {
+              EXPERIENCE.map((job) => (
+                <article class="panel panel-hover overflow-hidden">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-ink-700 bg-ink-850 px-5 py-3">
+                    <div class="flex flex-wrap items-baseline gap-x-3">
+                      <h3 class="font-mono text-base font-semibold text-ink-50">{job.company}</h3>
+                      <span class="text-sm text-ink-400">{job.role}</span>
+                    </div>
+                    <div class="flex items-center gap-3 font-mono text-xs text-ink-400">
+                      <span>{job.period}</span>
+                      <span class="rounded-[2px] border border-ink-600 px-1.5 py-0.5 text-ink-400">
+                        {job.mode}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="px-5 py-5">
+                    <p class="text-sm leading-relaxed text-ink-300 italic">{job.blurb}</p>
+                    {"storeLink" in job && job.storeLink && (
+                      <a href={job.storeLink.href} target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm mt-5">
+                        <Icon name="googleplay" class="h-3.5 w-3.5" />
+                        {job.storeLink.label}
+                      </a>
+                    )}
+                    <ul class="mt-4 space-y-2.5">
+                      {job.points.map((point) => (
+                        <li class="flex gap-3 text-sm leading-relaxed text-ink-200">
+                          <span class="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-accent-500" />
+                          <span>
+                            {boldParts(point).map((part) =>
+                              part.bold ? (
+                                <strong class="font-semibold text-ink-50">{part.text}</strong>
+                              ) : (
+                                part.text
+                              )
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="mt-16">
+          <SectionTitle index="02" title="Skills" />
+<div class="mt-8">
+        <SkillsGrid />
+      </div>
+        </section>
+
+        <section class="mt-16">
+          <SectionTitle index="03" title="Other skills" note="all basic level" />
+          <div class="mt-8 grid gap-px overflow-hidden rounded-[3px] border border-ink-700 bg-ink-700 sm:grid-cols-2">
+            {
+              OTHER_SKILLS.map((skill) => (
+                <div class="flex items-baseline gap-3 bg-ink-900 p-5">
+                  <span class="font-mono text-sm font-medium text-ink-100">{skill.name}</span>
+                  <span class="text-sm text-ink-400">{skill.detail}</span>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+      </div>
+
+      <!-- side panel -->
+      <aside class="space-y-4 lg:sticky lg:top-20 lg:self-start">
+        <div class="panel p-5">
+          <p class="border-b border-ink-700 pb-3 font-mono text-xs text-ink-400">details</p>
+          <dl class="mt-4 space-y-3 font-mono text-xs">
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Handle</dt>
+              <dd class="text-right text-ink-100">{SITE.name}</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Based in</dt>
+              <dd class="text-right text-ink-100">Armenia</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Timezone</dt>
+              <dd class="text-right text-ink-100">UTC+4</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Remote</dt>
+              <dd class="text-right text-ink-100">Yes, worldwide</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Languages</dt>
+              <dd class="text-right text-ink-100">EN C1, RU native</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400">Focus</dt>
+              <dd class="text-right text-ink-100">Mobile, client-server</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <dt class="text-ink-400 select-none">
+                <a
+                  href="/murli"
+                  class="text-ink-800 transition-colors hover:text-accent-500 focus-visible:text-accent-500"
+                  aria-label="Murli"
+                >
+                  Murli
+                </a>
+              </dt>
+              <dd class="text-right">
+                <a
+                  href="/murli"
+                  class="text-ink-800 transition-colors hover:text-accent-500 focus-visible:text-accent-500"
+                  aria-label="Murli"
+                >
+                  Murli
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="panel p-5">
+          <p class="border-b border-ink-700 pb-3 font-mono text-xs text-ink-400">other links</p>
+          <div class="mt-4 flex items-center gap-2.5">
+            <a
+              href={SITE.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              class="flex h-8 w-8 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:border-accent-500 hover:text-accent-400"
+            >
+              <Icon name="github" class="h-4 w-4" />
+            </a>
+            <a
+              href={SITE.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              class="flex h-8 w-8 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:border-accent-500 hover:text-accent-400"
+            >
+              <Icon name="linkedin" class="h-4 w-4" />
+            </a>
+            <a
+              href={SITE.telegram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Telegram"
+              class="flex h-8 w-8 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:border-accent-500 hover:text-accent-400"
+            >
+              <Icon name="telegram" class="h-4 w-4" />
+            </a>
+            <span
+              title="Discord: pyps1ch"
+              class="flex h-8 w-8 cursor-default items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300"
+            >
+              <Icon name="discord" class="h-4 w-4" />
+            </span>
+            <a
+              href={SITE.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              class="flex h-8 w-8 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:border-accent-500 hover:text-accent-400"
+            >
+              <Icon name="instagram" class="h-4 w-4" />
+            </a>
+            <a
+              href={SITE.itch}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="itch.io"
+              class="flex h-8 w-8 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:border-accent-500 hover:text-accent-400"
+            >
+              <Icon name="itch" class="h-4 w-4" />
+            </a>
+          </div>
+          <p class="mt-4 font-mono text-[0.625rem] text-ink-400">
+            Discord <span class="text-ink-400">pyps1ch</span>
+          </p>
+        </div>
+      </aside>
     </div>
-
-    <section class="mt-16">
-      <h2 class="section-title">Experience</h2>
-      <div class="mt-8 space-y-6">
-        {
-          experience.map((job) => (
-            <div class="card p-6">
-              <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 class="font-semibold tracking-tight">
-                  {job.role} <span class="text-ink-400 font-normal">- {job.company}</span>
-                </h3>
-                <span class="text-sm text-ink-400">{job.period}</span>
-              </div>
-              <ul class="mt-4 space-y-1.5 text-sm text-ink-300">
-                {job.points.map((point) => (
-                  <li class="flex gap-3">
-                    <span class="text-ink-600">&bull;</span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="mt-16">
-      <h2 class="section-title">Stack</h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          stack.map((group) => (
-            <div>
-              <h3 class="text-sm font-semibold text-ink-100">{group.group}</h3>
-              <ul class="mt-3 space-y-1.5">
-                {group.items.map((item) => (
-                  <li class="font-mono text-sm text-ink-400">{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
-    </section>
   </main>
 
   <Footer />

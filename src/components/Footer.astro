@@ -1,28 +1,56 @@
 ---
-import { SITE } from '../consts';
+import { SITE, SOCIAL } from '../consts';
+import Icon from './Icon.astro';
 ---
 
-<footer class="mt-auto border-t border-ink-800">
-  <div class="container-page py-10">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <p class="font-semibold">{SITE.name}</p>
-        <p class="mt-1 text-sm text-ink-400">{SITE.role}</p>
-      </div>
-      <div class="flex items-center gap-5 text-sm text-ink-400">
-        <a href={SITE.github} class="hover:text-accent-400 transition-colors" rel="noopener noreferrer" target="_blank">
-          GitHub
-        </a>
-        <a href={SITE.linkedin} class="hover:text-accent-400 transition-colors" rel="noopener noreferrer" target="_blank">
-          LinkedIn
-        </a>
-        <a href={`mailto:${SITE.email}`} class="hover:text-accent-400 transition-colors">
-          Email
+<footer class="mt-auto border-t border-ink-700 bg-ink-900">
+  <div class="container-page py-12">
+    <div>
+
+      <div class="grid gap-2.5 sm:grid-cols-2 lg:gap-x-14">
+        {
+          SOCIAL.map((item) => (
+            item.href ? (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-center gap-3 font-mono text-sm"
+              >
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors group-hover:border-accent-500 group-hover:text-accent-400">
+                  <Icon name={item.glyph} class="h-4 w-4" />
+                </span>
+                <span class="text-ink-300 transition-colors group-hover:text-ink-50">{item.label}</span>
+                <span class="truncate text-ink-400 transition-colors group-hover:text-ink-400">
+                  {item.handle}
+                </span>
+              </a>
+            ) : (
+              <span class="group flex items-center gap-3 font-mono text-sm">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300">
+                  <Icon name={item.glyph} class="h-4 w-4" />
+                </span>
+                <span class="text-ink-300">{item.label}</span>
+                <span class="truncate text-ink-400">{item.handle}</span>
+              </span>
+            )
+          ))
+        }
+        <a href={`mailto:${SITE.email}`} class="group flex items-center gap-3 font-mono text-sm">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-ink-600 bg-ink-800 text-ink-300 transition-colors group-hover:border-accent-500 group-hover:text-accent-400">
+            <Icon name="mail" class="h-4 w-4" />
+          </span>
+          <span class="text-ink-300 transition-colors group-hover:text-ink-50">Email</span>
+          <span class="truncate text-ink-400 transition-colors group-hover:text-ink-400">
+            {SITE.email}
+          </span>
         </a>
       </div>
     </div>
-    <p class="mt-8 text-xs text-ink-600">
-      {SITE.location} &middot; {SITE.availability}
-    </p>
+
+    <div class="mt-10 flex flex-col gap-3 border-t border-ink-700 pt-6 font-mono text-[0.6875rem] text-ink-400 sm:flex-row sm:items-center sm:justify-between">
+      <span>&copy; {new Date().getFullYear()} {SITE.name}</span>
+      <span>Built with Astro. No trackers, no cookie banner.</span>
+    </div>
   </div>
 </footer>

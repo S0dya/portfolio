@@ -3,7 +3,10 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import StoreShots from '../../components/StoreShots.astro';
 import { youtubeEmbed } from '../../lib/youtube';
+import { CATEGORY, STATUS } from '../../lib/labels';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -15,78 +18,130 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const embedUrl = youtubeEmbed(project.data.video);
+const d = project.data;
 
-const all = (await getCollection('projects')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
-const currentIndex = all.findIndex((p) => p.id === project.id);
-const next = all[(currentIndex + 1) % all.length];
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const siblings = all.filter((p) => p.data.category === d.category);
+const idx = siblings.findIndex((p) => p.id === project.id);
+const next = siblings.length > 1 ? siblings[(idx + 1) % siblings.length] : null;
 
-const statusLabel: Record<string, string> = {
-  live: 'Live',
-  released: 'Released',
-  'in-dev': 'In development',
-  backend: 'Backend',
-};
+const embedUrl = youtubeEmbed(d.video);
+const statusMeta = STATUS[d.status];
+const categoryMeta = CATEGORY[d.category];
+
+const links = [
+  { show: Boolean(d.play), href: d.play, label: d.category === 'freelance' ? 'Steam' : 'Google Play', icon: d.category === 'freelance' ? 'steam' : 'googleplay', primary: true },
+  { show: Boolean(d.itch), href: d.itch, label: 'Play on itch.io', icon: 'itch', primary: true },
+  { show: Boolean(d.github), href: d.github, label: d.githubLabel ?? 'Source code', icon: 'github', primary: false },
+  { show: Boolean(d.githubBackend), href: d.githubBackend, label: d.githubBackendLabel ?? 'Backend code', icon: 'github', primary: false },
+  { show: Boolean(d.video), href: d.video, label: 'Gameplay video', icon: null, primary: false },
+].filter((l) => l.show);
 ---
 
-<Base title={project.data.title} description={project.data.description}>
+<Base title={d.title} description={d.summary}>
   <Header />
 
-  <main class="container-page pt-12 pb-16 sm:pt-16">
-    <a href="/projects" class="text-sm text-ink-400 hover:text-accent-400 transition-colors">
-      &larr; All projects
+  <main id="main" class="container-narrow w-full min-w-0 pt-12 pb-16 sm:pt-14">
+    <a href="/projects" class="font-mono text-xs text-ink-400 transition-colors hover:text-accent-400">
+      &larr; back to projects
     </a>
 
-    <div class="mt-8">
-      <div class="flex flex-wrap items-center gap-3">
+    <!-- header block, styled like an IDE inspector header -->
+    <div class="mt-6 panel">
+      <div class="flex flex-wrap items-center gap-3 border-b border-ink-700 bg-ink-850 px-5 py-2.5 font-mono text-xs">
         <span
-          class="rounded-md px-2.5 py-1 text-xs font-medium"
-          style={`background-color: ${project.data.accent ?? '#4f7cff'}22; color: ${project.data.accent ?? '#4f7cff'}; border: 1px solid ${project.data.accent ?? '#4f7cff'}44;`}
+          class="status-pill"
+          style={`color: ${statusMeta.color}; background-color: color-mix(in srgb, ${statusMeta.color} 18%, var(--color-ink-800));`}
         >
-          {statusLabel[project.data.status] ?? project.data.status}
+          {statusMeta.label}
         </span>
-        <span class="text-sm text-ink-400">{project.data.platform}</span>
-        <span class="text-sm text-ink-600">&middot;</span>
-        <span class="text-sm text-ink-400">{project.data.year}</span>
+        <span class="flex items-center gap-1.5 text-ink-400">
+          <span class="h-1.5 w-1.5 rounded-full" style={`background-color: ${categoryMeta.color}`}
+          ></span>
+          {categoryMeta.label}
+        </span>
+        <span class="text-ink-400">|</span>
+        <span class="text-ink-400">{d.platform}</span>
       </div>
 
-      <h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">{project.data.title}</h1>
-      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-300">{project.data.description}</p>
+      <div class="p-6 sm:p-8">
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="font-mono text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">
+            {d.title}
+          </h1>
+          {
+            d.client && (
+              <span class="rounded-[2px] border border-ink-600 bg-ink-850 px-2 py-1 font-mono text-[0.6875rem] text-ink-300">
+                {d.client}
+              </span>
+            )
+          }
+        </div>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-ink-200">{d.summary}</p>
 
-      <div class="mt-6 flex flex-wrap gap-2">
-        {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
-      </div>
+        <!-- when it was made -->
+        <div class="mt-6 flex items-center gap-3 rounded-[2px] border border-ink-700 bg-ink-850 px-4 py-3 font-mono text-xs">
+          <Icon name="calendar" class="h-4 w-4 text-accent-400" />
+          <span class="text-ink-400">Made</span>
+          <span class="font-semibold text-ink-100">{d.year}</span>
+        </div>
 
-      <div class="mt-6 text-sm text-ink-400">
-        <span class="text-ink-600">Role:</span> {project.data.role}
-      </div>
+        <div class="mt-5 flex flex-wrap gap-1.5">
+          {d.tags.map((tag) => <span class="chip">{tag}</span>)}
+        </div>
 
-      <div class="mt-8 flex flex-wrap gap-3">
-        {project.data.play && (
-          <a href={project.data.play} target="_blank" rel="noopener noreferrer" class="btn-primary">
-            Play on Google Play
-          </a>
-        )}
-        {project.data.video && (
-          <a href={project.data.video} target="_blank" rel="noopener noreferrer" class="btn-ghost">
-            Watch gameplay
-          </a>
-        )}
-        {project.data.github && (
-          <a href={project.data.github} target="_blank" rel="noopener noreferrer" class="btn-ghost">
-            Source code
-          </a>
-        )}
+        <dl class="mt-5 space-y-1.5 border-t border-ink-700 pt-5 font-mono text-xs">
+          <div class="flex gap-2">
+            <dt class="text-ink-400">Role:</dt>
+            <dd class="text-ink-300">{d.role}</dd>
+          </div>
+        </dl>
+
+        <div class="mt-6 flex flex-wrap gap-2.5">
+          {
+            links.map((link) => (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class:list={['btn btn-sm', link.primary ? 'btn-primary' : 'btn-ghost']}
+              >
+                {link.icon && <Icon name={link.icon} class="h-3.5 w-3.5" />}
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
       </div>
     </div>
 
     {
+      d.cover && (
+        <div class="mt-6 flex min-w-0 justify-center overflow-hidden rounded-[3px] border border-ink-700 bg-ink-900 p-3">
+          <img
+            src={d.cover}
+            alt={`${d.title} preview`}
+            loading="lazy"
+            decoding="async"
+            width={d.coverWidth}
+            height={d.coverHeight}
+            style={`width:${Math.max(d.coverWidth ?? 640, 480)}px;max-width:100%`}
+            class:list={[
+              'block h-auto rounded-[2px]',
+              { 'bg-ink-850 object-contain': !d.coverIsGif },
+            ]}
+          />
+        </div>
+      )
+    }
+
+    {
       embedUrl && (
-        <div class="mt-10 aspect-video overflow-hidden rounded-xl border border-ink-700 bg-ink-900">
+        <div class="mt-6 aspect-video overflow-hidden rounded-[3px] border border-ink-700 bg-ink-900">
           <iframe
             class="h-full w-full"
             src={embedUrl}
-            title={`${project.data.title} gameplay`}
+            title={`${d.title} gameplay`}
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
@@ -95,19 +150,35 @@ const statusLabel: Record<string, string> = {
       )
     }
 
-    <article class="prose-project mt-12 max-w-2xl">
+    {
+      d.storeShots && d.play && (
+        <StoreShots shots={d.storeShots} href={d.play} store="Google Play" />
+      )
+    }
+
+    <article class="prose-project mt-10">
       <Content />
     </article>
 
-    <div class="mt-16 border-t border-ink-800 pt-8">
-      <a href={`/projects/${next.id}`} class="group inline-flex items-center gap-3">
-        <div>
-          <p class="text-xs text-ink-400 uppercase tracking-wider">Next project</p>
-          <p class="mt-1 font-medium group-hover:text-accent-400 transition-colors">{next.data.title}</p>
+    {
+      next && (
+        <div class="mt-16 border-t border-ink-700 pt-6">
+          <a href={`/projects/${next.id}`} class="group flex items-center justify-between gap-6">
+            <div class="min-w-0">
+              <p class="font-mono text-[0.6875rem] tracking-widest text-ink-400 uppercase">
+                Next in {categoryMeta.label}
+              </p>
+              <p class="mt-1.5 truncate font-mono text-base font-medium text-ink-100 transition-colors group-hover:text-accent-400">
+                {next.data.title}
+              </p>
+            </div>
+            <span class="shrink-0 text-ink-400 transition-transform group-hover:translate-x-1 group-hover:text-accent-400">
+              &rarr;
+            </span>
+          </a>
         </div>
-        <span class="text-ink-400 group-hover:text-accent-400 transition-colors">&rarr;</span>
-      </a>
-    </div>
+      )
+    }
   </main>
 
   <Footer />

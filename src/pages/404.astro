@@ -7,12 +7,19 @@ import Footer from '../components/Footer.astro';
 <Base title="Not found">
   <Header />
 
-  <main class="container-page flex flex-1 items-center justify-center py-24 text-center">
-    <div>
-      <p class="text-6xl font-bold text-ink-700">404</p>
-      <h1 class="mt-4 text-2xl font-semibold">Page not found</h1>
-      <p class="mt-2 text-ink-400">That page does not exist.</p>
-      <a href="/" class="btn-primary mt-8">Back home</a>
+  <main id="main" class="container-page flex flex-1 items-center justify-center py-24">
+    <div class="panel w-full max-w-lg p-8">
+      <p class="font-mono text-xs text-ink-400">HTTP 404</p>
+      <p class="mt-4 font-mono text-5xl font-bold text-accent-500">404</p>
+      <h1 class="mt-4 text-xl font-semibold text-ink-50">This route does not exist</h1>
+      <p class="mt-2 text-sm leading-relaxed text-ink-400">
+        Nothing is served from that path. Check the URL, or go back and pick something that does
+        exist.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/" class="btn btn-primary">Back home</a>
+        <a href="/projects" class="btn btn-ghost">Projects</a>
+      </div>
     </div>
   </main>
 

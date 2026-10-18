@@ -4,33 +4,61 @@ import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import { CATEGORY, CATEGORY_ORDER } from '../../lib/labels';
 
-const projects = (await getCollection('projects')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const all = await getCollection('projects');
+const groups = CATEGORY_ORDER.map((key) => ({
+  meta: CATEGORY[key],
+  items: all.filter((p) => p.data.category === key).sort((a, b) => a.data.order - b.data.order),
+}));
 ---
 
-<Base title="Projects" description="Projects by Damir Mavliutov - Unity mobile games and backend work.">
+<Base
+  title="Projects"
+  
+  description="Mobile games, web games, backend and tools - Android and iOS titles, browser games, an ASP.NET Core game backend, client work and a desktop release."
+>
   <Header />
 
-  <main class="container-page pt-16 pb-16 sm:pt-20">
-    <h1 class="text-4xl font-bold tracking-tight">Projects</h1>
-    <p class="mt-4 max-w-2xl text-lg text-ink-300">
-      Mobile games I built and shipped, and the backend behind them.
-    </p>
+  <main id="main" class="container-page pt-14 pb-16 sm:pt-16">
+    <h1 class="text-3xl font-bold tracking-tight text-ink-50 sm:text-4xl">Projects</h1>
 
-    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+    <div class="mt-14 space-y-16">
       {
-        projects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            href={`/projects/${project.id}`}
-            year={project.data.year}
-            platform={project.data.platform}
-            tags={project.data.tags}
-            status={project.data.status}
-            accent={project.data.accent}
-            video={project.data.video}
-          />
+        groups.map((group, i) => (
+          <section>
+            <SectionTitle
+              index={`0${i + 1}`}
+              title={group.meta.label}
+            />
+            <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {group.items.map((project) => (
+                <ProjectCard
+                  title={project.data.title}
+                  summary={project.data.summary}
+                  href={`/projects/${project.id}`}
+                  year={project.data.year}
+                  platform={project.data.platform}
+                  category={project.data.category}
+                  tags={project.data.tags}
+                  status={project.data.status}
+                  cover={project.data.cover}
+                  coverIsGif={project.data.coverIsGif}
+                  coverWidth={project.data.coverWidth}
+                  coverHeight={project.data.coverHeight}
+                  accent={project.data.accent}
+                  client={project.data.client}
+                  github={project.data.github}
+                  githubLabel={project.data.githubLabel}
+                  githubBackend={project.data.githubBackend}
+                  githubBackendLabel={project.data.githubBackendLabel}
+                  play={project.data.play}
+                  itch={project.data.itch}
+                />
+              ))}
+            </div>
+          </section>
         ))
       }
     </div>

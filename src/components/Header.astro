@@ -2,36 +2,44 @@
 import { SITE } from '../consts';
 
 const nav = [
-  { href: '/', label: 'Home' },
+  { href: '/', label: 'Profile' },
   { href: '/projects', label: 'Projects' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
 
 const path = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === '/' ? path === '/' : path.startsWith(href);
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header class="sticky top-0 z-50 border-b border-ink-800/80 bg-ink-950/80 backdrop-blur-md">
+<header class="sticky top-0 z-50 border-b border-ink-700 bg-ink-950/85 backdrop-blur-md">
   <div class="container-page">
-    <nav class="flex h-16 items-center justify-between">
-      <a href="/" class="text-lg font-semibold tracking-tight hover:text-accent-400 transition-colors">
-        {SITE.name}
+    <nav class="flex h-14 items-center justify-between gap-3 sm:justify-start">
+      <a href="/" class="group flex shrink-0 items-center gap-1.5 font-mono text-sm">
+        <span class="text-accent-500">&gt;</span>
+        <span class="font-semibold text-ink-100 transition-colors group-hover:text-accent-400">
+          {SITE.name}
+        </span>
+        <span class="hidden text-ink-400 sm:inline">.dev</span>
       </a>
-      <div class="flex items-center gap-1 sm:gap-2">
+
+      <!-- IDE-style tab strip -->
+      <div class="no-scrollbar -mb-px flex min-w-0 items-end self-stretch overflow-x-auto sm:ml-auto">
         {
           nav.map((item) => (
             <a
               href={item.href}
-              class:list={[
-                'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
-                isActive(item.href)
-                  ? 'bg-ink-800 text-ink-100'
-                  : 'text-ink-400 hover:bg-ink-800/60 hover:text-ink-100',
-              ]}
               aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'flex h-full items-center gap-1.5 border-x border-b px-2.5 font-mono text-[0.6875rem] whitespace-nowrap transition-colors sm:gap-2 sm:px-4 sm:text-xs',
+                isActive(item.href)
+                  ? 'border-ink-700 bg-ink-800 text-ink-100'
+                  : 'border-transparent text-ink-400 hover:bg-ink-850 hover:text-ink-200',
+              ]}
             >
+              <span class:list={[isActive(item.href) ? 'text-accent-500' : 'text-ink-400']}>
+                {isActive(item.href) ? '●' : '○'}
+              </span>
               {item.label}
             </a>
           ))
