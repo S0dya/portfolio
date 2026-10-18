@@ -78,11 +78,9 @@ src/
     projects/[slug].astro    one page per project
     about.astro
     contact.astro
-    murli.astro              one image, reachable from the About side panel
     404.astro
   styles/global.css          theme tokens + component classes
 public/media/projects/       preview images and gifs
-public/media/murli/          the Murli page image
 ```
 
 ## Adding a project
